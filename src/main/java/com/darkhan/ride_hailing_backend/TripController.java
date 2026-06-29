@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -18,10 +19,12 @@ import org.springframework.web.server.ResponseStatusException;
 public class TripController {
 	private final TripRepository tripRepository;
 	private final PassengerRepository passengerRepository;
+	private final TripService tripService;
 	
-	public TripController(TripRepository tripRepository, PassengerRepository passengerRepository) {
+	public TripController(TripRepository tripRepository, PassengerRepository passengerRepository, TripService tripService) {
 		this.tripRepository = tripRepository;
 		this.passengerRepository = passengerRepository;
+		this.tripService = tripService;
 	}
 	
 	@PostMapping("/passenger/{passengerId}")
@@ -62,6 +65,11 @@ public class TripController {
 		
 		tripRepository.deleteById(tripId);
 	}
+	
+	@PutMapping("/{id}")
+	public Trip updateTrip(@PathVariable Long id, @RequestBody TripRequestDTO dto) {
+		return tripService.updateTrip(id, dto);
+	}
 
 	public TripRepository getTripRepository() {
 		return tripRepository;
@@ -70,6 +78,11 @@ public class TripController {
 	public PassengerRepository getPassengerRepository() {
 		return passengerRepository;
 	}
+
+	public TripService getTripService() {
+		return tripService;
+	}
+	
 	
 	
 }
