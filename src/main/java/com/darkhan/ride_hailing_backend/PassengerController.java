@@ -40,7 +40,8 @@ public class PassengerController {
 	public void deletePassenger(@PathVariable Long id) {
 		if(!passengerRepository.existsById(id)) {
 			throw new ResponseStatusException(
-					HttpStatus.NOT_FOUND, "Cannot delete. Passenger with ID " + id + " does not exist");
+					HttpStatus.NOT_FOUND, "Cannot delete. Passenger with ID " + id + " does not exist"
+			);
 			
 		}
 		passengerRepository.deleteById(id);

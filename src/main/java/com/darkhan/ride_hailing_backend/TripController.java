@@ -3,6 +3,7 @@ package com.darkhan.ride_hailing_backend;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +30,7 @@ public class TripController {
 		Passenger passenger = passengerRepository.findById(passengerId)
 				.orElseThrow(() -> new ResponseStatusException(
 						HttpStatus.NOT_FOUND, "Cannot book trip. Passenger ID " + passengerId + " not found"
-					));
+				));
 		
 		trip.setPassenger(passenger);
 		
@@ -39,6 +40,27 @@ public class TripController {
 	@GetMapping
 	public List<Trip> getAllTrips() {
 		return tripRepository.findAll();
+	}
+	
+	@GetMapping("/{tripId}")
+	public Trip getTripById(@PathVariable Long tripId) {
+		return tripRepository.findById(tripId)
+				.orElseThrow(() -> new ResponseStatusException(
+						HttpStatus.NOT_FOUND, "Trip with ID " + tripId + " not found"
+				));
+		
+	}
+	
+	@DeleteMapping("/{tripId}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteTrip(@PathVariable Long tripId) {
+		if(!tripRepository.existsById(tripId)) {
+			throw new ResponseStatusException(
+					HttpStatus.NOT_FOUND, "Cannot delete. Trip with ID " + tripId + " doesn't exist"
+			);
+		}
+		
+		tripRepository.deleteById(tripId);
 	}
 
 	public TripRepository getTripRepository() {
